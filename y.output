@@ -1,0 +1,350 @@
+Grammar
+
+    0 $accept: program $end
+
+    1 program: statement_list
+
+    2 statement_list: statement '\n'
+    3               | statement_list statement '\n'
+
+    4 statement: assignment ':'
+    5          | assignment
+    6          | expression ':'
+
+    7 assignment: ID '=' expression
+
+    8 expression: NUMBER
+    9           | ID
+   10           | expression '+' expression
+   11           | expression '-' expression
+   12           | expression '*' expression
+   13           | expression '/' expression
+   14           | '(' expression ')'
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    '\n' (10) 2 3
+    '(' (40) 14
+    ')' (41) 14
+    '*' (42) 12
+    '+' (43) 10
+    '-' (45) 11
+    '/' (47) 13
+    ':' (58) 4 6
+    '=' (61) 7
+    error (256)
+    NUMBER <num> (258) 8
+    ID <str> (259) 7 9
+
+
+Nonterminals, with rules where they appear
+
+    $accept (14)
+        on left: 0
+    program (15)
+        on left: 1
+        on right: 0
+    statement_list (16)
+        on left: 2 3
+        on right: 1 3
+    statement (17)
+        on left: 4 5 6
+        on right: 2 3
+    assignment <num> (18)
+        on left: 7
+        on right: 4 5
+    expression <num> (19)
+        on left: 8 9 10 11 12 13 14
+        on right: 6 7 10 11 12 13 14
+
+
+State 0
+
+    0 $accept: . program $end
+
+    NUMBER  shift, and go to state 1
+    ID      shift, and go to state 2
+    '('     shift, and go to state 3
+
+    program         go to state 4
+    statement_list  go to state 5
+    statement       go to state 6
+    assignment      go to state 7
+    expression      go to state 8
+
+
+State 1
+
+    8 expression: NUMBER .
+
+    $default  reduce using rule 8 (expression)
+
+
+State 2
+
+    7 assignment: ID . '=' expression
+    9 expression: ID .
+
+    '='  shift, and go to state 9
+
+    $default  reduce using rule 9 (expression)
+
+
+State 3
+
+   14 expression: '(' . expression ')'
+
+    NUMBER  shift, and go to state 1
+    ID      shift, and go to state 10
+    '('     shift, and go to state 3
+
+    expression  go to state 11
+
+
+State 4
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 12
+
+
+State 5
+
+    1 program: statement_list .
+    3 statement_list: statement_list . statement '\n'
+
+    NUMBER  shift, and go to state 1
+    ID      shift, and go to state 2
+    '('     shift, and go to state 3
+
+    $default  reduce using rule 1 (program)
+
+    statement   go to state 13
+    assignment  go to state 7
+    expression  go to state 8
+
+
+State 6
+
+    2 statement_list: statement . '\n'
+
+    '\n'  shift, and go to state 14
+
+
+State 7
+
+    4 statement: assignment . ':'
+    5          | assignment .
+
+    ':'  shift, and go to state 15
+
+    $default  reduce using rule 5 (statement)
+
+
+State 8
+
+    6 statement: expression . ':'
+   10 expression: expression . '+' expression
+   11           | expression . '-' expression
+   12           | expression . '*' expression
+   13           | expression . '/' expression
+
+    '*'  shift, and go to state 16
+    '/'  shift, and go to state 17
+    '+'  shift, and go to state 18
+    '-'  shift, and go to state 19
+    ':'  shift, and go to state 20
+
+
+State 9
+
+    7 assignment: ID '=' . expression
+
+    NUMBER  shift, and go to state 1
+    ID      shift, and go to state 10
+    '('     shift, and go to state 3
+
+    expression  go to state 21
+
+
+State 10
+
+    9 expression: ID .
+
+    $default  reduce using rule 9 (expression)
+
+
+State 11
+
+   10 expression: expression . '+' expression
+   11           | expression . '-' expression
+   12           | expression . '*' expression
+   13           | expression . '/' expression
+   14           | '(' expression . ')'
+
+    '*'  shift, and go to state 16
+    '/'  shift, and go to state 17
+    '+'  shift, and go to state 18
+    '-'  shift, and go to state 19
+    ')'  shift, and go to state 22
+
+
+State 12
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+State 13
+
+    3 statement_list: statement_list statement . '\n'
+
+    '\n'  shift, and go to state 23
+
+
+State 14
+
+    2 statement_list: statement '\n' .
+
+    $default  reduce using rule 2 (statement_list)
+
+
+State 15
+
+    4 statement: assignment ':' .
+
+    $default  reduce using rule 4 (statement)
+
+
+State 16
+
+   12 expression: expression '*' . expression
+
+    NUMBER  shift, and go to state 1
+    ID      shift, and go to state 10
+    '('     shift, and go to state 3
+
+    expression  go to state 24
+
+
+State 17
+
+   13 expression: expression '/' . expression
+
+    NUMBER  shift, and go to state 1
+    ID      shift, and go to state 10
+    '('     shift, and go to state 3
+
+    expression  go to state 25
+
+
+State 18
+
+   10 expression: expression '+' . expression
+
+    NUMBER  shift, and go to state 1
+    ID      shift, and go to state 10
+    '('     shift, and go to state 3
+
+    expression  go to state 26
+
+
+State 19
+
+   11 expression: expression '-' . expression
+
+    NUMBER  shift, and go to state 1
+    ID      shift, and go to state 10
+    '('     shift, and go to state 3
+
+    expression  go to state 27
+
+
+State 20
+
+    6 statement: expression ':' .
+
+    $default  reduce using rule 6 (statement)
+
+
+State 21
+
+    7 assignment: ID '=' expression .
+   10 expression: expression . '+' expression
+   11           | expression . '-' expression
+   12           | expression . '*' expression
+   13           | expression . '/' expression
+
+    '*'  shift, and go to state 16
+    '/'  shift, and go to state 17
+    '+'  shift, and go to state 18
+    '-'  shift, and go to state 19
+
+    $default  reduce using rule 7 (assignment)
+
+
+State 22
+
+   14 expression: '(' expression ')' .
+
+    $default  reduce using rule 14 (expression)
+
+
+State 23
+
+    3 statement_list: statement_list statement '\n' .
+
+    $default  reduce using rule 3 (statement_list)
+
+
+State 24
+
+   10 expression: expression . '+' expression
+   11           | expression . '-' expression
+   12           | expression . '*' expression
+   12           | expression '*' expression .
+   13           | expression . '/' expression
+
+    '+'  shift, and go to state 18
+    '-'  shift, and go to state 19
+
+    $default  reduce using rule 12 (expression)
+
+
+State 25
+
+   10 expression: expression . '+' expression
+   11           | expression . '-' expression
+   12           | expression . '*' expression
+   13           | expression . '/' expression
+   13           | expression '/' expression .
+
+    '+'  shift, and go to state 18
+    '-'  shift, and go to state 19
+
+    $default  reduce using rule 13 (expression)
+
+
+State 26
+
+   10 expression: expression . '+' expression
+   10           | expression '+' expression .
+   11           | expression . '-' expression
+   12           | expression . '*' expression
+   13           | expression . '/' expression
+
+    $default  reduce using rule 10 (expression)
+
+
+State 27
+
+   10 expression: expression . '+' expression
+   11           | expression . '-' expression
+   11           | expression '-' expression .
+   12           | expression . '*' expression
+   13           | expression . '/' expression
+
+    $default  reduce using rule 11 (expression)
